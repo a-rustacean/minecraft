@@ -1,5 +1,5 @@
 {
-  description = "MCRE Dev shell";
+  description = "Minecraft Dev shell";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -51,10 +51,6 @@
               pkgs.zig
               pkgs.zls
             ];
-
-            shellHook = ''
-              export PATH="$HOME/.cargo/bin:$PATH"
-            '';
           };
         }
       );
