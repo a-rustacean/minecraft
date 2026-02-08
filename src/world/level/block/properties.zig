@@ -20,10 +20,30 @@ pub const BlockProperties = struct {
     requires_correct_tool_for_drops: bool,
     is_randomly_ticking: bool,
     has_collision: bool = true,
-    // TODO: drops, descriptionID
+    liquid: bool,
+    force_solid_off: bool,
+    force_solid_on: bool,
     can_occlude: bool = true,
     is_air: bool,
     ignited_by_lava: bool,
     spawn_terrain_particles: bool = true,
+    replaceable: bool,
+    dynamic_shape: bool,
+    // TODO:
+    // - drops
+    // - descriptionID
+    // - isValidSpawn
+    // - isRedstoneConductor
+    // - isSuffocating
+    // - isViewBlocking
+    // - hasPostProcess
+    // - emissiveRendering
     push_reaction: PushReaction,
+    offset_type: OffsetType,
+};
+
+pub const OffsetType = enum(u2) {
+    None,
+    Xz,
+    Xyz,
 };
