@@ -1,0 +1,12 @@
+.{
+    .name = .minecraft,
+    .version = "0.0.0",
+    .fingerprint = 0x354fdd05fbc037a0,
+    .minimum_zig_version = "0.16.0-dev.2471+e9eadee00",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
