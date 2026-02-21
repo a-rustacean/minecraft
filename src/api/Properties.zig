@@ -3,6 +3,33 @@ const Property = @import("./Property.zig");
 const assert = std.debug.assert;
 const Type = std.builtin.Type;
 const Allocator = std.mem.Allocator;
+const ArrayList = std.ArrayList;
+
+pub const Registry = struct {
+    impls: ArrayList(Property.Impl),
+
+    pub fn init() Registry {
+        return .{ .impls = .{} };
+    }
+
+    pub fn deinit(registery: *Registry, gpa: Allocator) void {
+        registery.impls.deinit(gpa);
+    }
+
+    pub fn register(registry: *Registry, gpa: Allocator, property: Property.Impl) error{OutOfMemory}!Property.Ref {
+        const new_idx: u32 = @intCast(registry.impls.items.len);
+        try registry.impls.append(gpa, property);
+
+        return .{
+            .idx = new_idx,
+        };
+    }
+
+    pub fn get(registry: *Registry, ref: Property.Ref) Property.Impl {
+        const idx: usize = @intCast(ref.idx);
+        return registry.impls.items[idx];
+    }
+};
 
 pub fn Define(PropertiesSchema: type) type {
     const type_info = @typeInfo(PropertiesSchema);
@@ -30,7 +57,7 @@ pub fn Define(PropertiesSchema: type) type {
         const Self = @This();
         refs: PropertyRefs,
 
-        pub fn init(registry: *Property.Registry, gpa: Allocator) error{OutOfMemory}!Self {
+        pub fn init(registry: *Registry, gpa: Allocator) error{OutOfMemory}!Self {
             const ref_fields = @typeInfo(PropertyRefs).@"struct".fields;
             var result: PropertyRefs = undefined;
 

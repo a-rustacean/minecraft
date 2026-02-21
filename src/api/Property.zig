@@ -5,6 +5,8 @@ const Allocator = mem.Allocator;
 const assert = std.debug.assert;
 
 pub const Impl = struct {
+    // number of possible values this property can have, every property must have a fixed and
+    // comptime known number of possible values.
     cardinality: u32,
     toString: *const fn (u32) []const u8,
     fromString: *const fn ([]const u8) ?u32,
@@ -32,32 +34,6 @@ const bool_property_impls = Impl{
 
 pub const Ref = extern struct {
     idx: u32,
-};
-
-pub const Registry = struct {
-    impls: ArrayList(Impl),
-
-    pub fn init() Registry {
-        return .{ .impls = ArrayList(Impl){} };
-    }
-
-    pub fn deinit(registery: *Registry, gpa: Allocator) void {
-        registery.impls.deinit(gpa);
-    }
-
-    pub fn register(registry: *Registry, gpa: Allocator, property: Impl) error{OutOfMemory}!Ref {
-        const new_idx: u32 = @intCast(registry.impls.items.len);
-        try registry.impls.append(gpa, property);
-
-        return .{
-            .idx = new_idx,
-        };
-    }
-
-    pub fn get(registry: *Registry, ref: Ref) Impl {
-        const idx: usize = @intCast(ref.idx);
-        return registry.impls.items[idx];
-    }
 };
 
 pub fn Range(comptime min: u32, comptime max: u32) type {
